@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="RobinMacbook" created="Mon Mar 17 14:49:35 PDT 2014" description="Map To CSV" guiVersion="3.4.3.P" id="1395097345717" licenseCode="Unlicensed" licenseType="Unknown" modified="Mon Mar 17 14:49:35 PDT 2014" modifiedBy="RobinMacbook" name="Map_To_CSV" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Input_x0020data" _dataStructure="OBJECT" _id="__id" _type="Input" id="3d25248c-b5ae-41e9-85d8-be72dfbb941e">
+<Record fieldDelimiter="," name="Input_data" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="1" __sourcePath="{}/Input_x0020data/age" containerType="SINGLE" label="age" name="age" type="integer"/>
+<Field __index="0" __sourcePath="{}/Input_x0020data/username" containerType="SINGLE" label="username" name="username" type="string"/>
+</Record>
+</Metadata>
+<Metadata __referenceCounter="1" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _type="Output" id="63e833c8-a0f8-4cb4-803e-8e335bf5b53d">
+<Record fieldDelimiter="," name="User_log" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field containerType="SINGLE" label="username" name="username" size="10" type="string"/>
+<Field containerType="SINGLE" label="age" name="age" size="10" type="integer"/>
+<Field containerType="SINGLE" eofAsDelimiter="true" label="of_age" name="of_age" size="10" type="boolean"/>
+<Field __artificialType="_id" name="__id" type="long"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Map&lt;k,v&gt; READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="age" trim="true" xpath="age"/>
+  <Mapping cloverField="username" trim="true" xpath="username"/>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="enabled" excludeFields="__id" fileURL="dict:outputPayload" guiName="CSV WRITER" guiX="900" guiY="20" id="DATA_WRITER0" quotedStrings="true" type="DATA_WRITER">
+<attr name="_data_format"><![CDATA[CSV]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'Input_x0020data' -&gt; 'User_log'" guiX="460" guiY="20" id="FOREACH_INPUT_X0020DATA_USER_LOG" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = (isnull(input.__id) ? null : str2long(input.__id));
+//END -> DO NOT REMOVE
+output.age = input.age;
+output.username = input.username;
+output.of_age = input.age>18;]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="3d25248c-b5ae-41e9-85d8-be72dfbb941e" outPort="Port 0 (out)" toNode="FOREACH_INPUT_X0020DATA_USER_LOG:0"/>
+<Edge debugMode="true" fromNode="FOREACH_INPUT_X0020DATA_USER_LOG:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="63e833c8-a0f8-4cb4-803e-8e335bf5b53d" outPort="Port 0 (out)" toNode="DATA_WRITER0:0"/>
+</Phase>
+</Graph>
